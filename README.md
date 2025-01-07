@@ -1,82 +1,109 @@
-Microservicio para la Creación y Consulta de Usuarios
+###Microservicio para la Creación y Consulta de Usuarios
 
 El presente proyecto es un microservicio desarrollado con Spring Boot (versión 2.5.14) y Gradle (versión 7.4) para la gestión de usuarios. Permite la creación y consulta de usuarios, además de la gestion de los teléfonos asociados a cada usuario.
 
-Requisitos 
+###Requisitos 
 * Java 11 
 * Gradle 7.4
 * Spring Boot 2.5.14
 
-Descripción
+###Descripción
 Este microservicio proporciona endpoints para crear y consultar usuarios. Además, cada usuario puede tener múltiples teléfonos asociados. Las entidades principales son:
 
 * UserEntity: representa al usuario con atributos como userUuid, name, email, password, createdAt, lastLogin, y isActive.
 * PhoneEntity: representa los teléfonos asociados a los usuarios, donde cada teléfono tiene una relación con un UserEntity a través de una llave foránea.
 
-Instrucciones para Construcción y Ejecución Local
-1. Clonar el repositorio
-Primero, clona el repositorio desde GitHub (o el repositorio público correspondiente):
+Instrucciones para construcción y ejecución local
 
-## bash
-git clone https://github.com/usuario/repositorio.git
-cd repositorio
+1. Clonar el repositorio
+
+Primero, clona el repositorio desde GitHub con el siguiente comando:
+
+     `git clone https://github.com/JuanPabloGuirado/global-logic-challenge.git`
+
 2. Construir el Proyecto
-Asegúrate de tener Gradle instalado en tu máquina. Si no lo tienes, puedes descargarlo desde aquí.
 
 Para construir el proyecto con Gradle, ejecuta el siguiente comando en la raíz del proyecto:
 
-bash
-Copy code
-./gradlew build
+    `./gradlew build`
+
 Esto descargará las dependencias necesarias y compilará el proyecto.
 
 3. Configuración del Proyecto
-El archivo application.properties contiene las configuraciones necesarias para la conexión con la base de datos y otros parámetros.
 
-Si deseas usar una base de datos en memoria (H2), ya está preconfigurado de la siguiente manera:
+El archivo application.yaml contiene las configuraciones necesarias para la conexión con la base de datos y otros parámetros.
 
-properties
-Copy code
-spring.datasource.url=jdbc:h2:mem:testdb
-spring.datasource.driverClassName=org.h2.Driver
-spring.datasource.username=sa
-spring.datasource.password=password
-spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
-spring.h2.console.enabled=true
-Si prefieres usar una base de datos externa, deberás modificar estos valores según sea necesario.
+La base de datos en memoria (H2), ya está preconfigurada de la siguiente manera:
+
+* Base de datos url = jdbc:h2:mem:userdb
+* Username = admin
+* Password = 1234
+
+NOTA: con estas mismas credenciales podras acceder a la consola web de h2 (una vez que el proyecto este siendo ejecutado localmente), entrando a: 
+
+`http://localhost:8080/h2-console/`
 
 4. Ejecutar el Proyecto
 Para ejecutar el microservicio de manera local, usa el siguiente comando:
 
-bash
-Copy code
-./gradlew bootRun
-El servidor Spring Boot se iniciará y estará disponible en http://localhost:8080.
+    `./gradlew bootRun`
+    
+El servidor Spring Boot se iniciará y estará disponible en `http://localhost:8090`, si prefieres cambiar el puerto puedes cambiarlo en el archivo de configuracion `application.yaml` (server.port)
 
 5. Probar los Endpoints
+
 Una vez que el servidor esté en ejecución, podrás interactuar con los siguientes endpoints:
 
-POST /usuarios: Crear un nuevo usuario.
-Body de ejemplo:
+POST `http://localhost:8090/users/sign-up` : Crear un nuevo usuario. Este endpoint no cuenta con proceso de autenticacion
 
-json
+Body de ejemplo (json): 
+
+Request: 
+```
 {
-  "userUuid": "123e4567-e89b-12d3-a456-426614174000",
-  "name": "Juan Pérez",
-  "email": "juan.perez@ejemplo.com",
-  "password": "password123",
-  "createdAt": "2025-01-07T12:00:00",
-  "lastLogin": "2025-01-07T12:00:00",
-  "isActive": true
+    "name": "Juan Perez",
+    "email": "juan@correo.com",
+    "password": "a3asfGfdfdf4",
+    "phones": [
+        {
+            "number": 778779234,
+            "cityCode": 99,
+            "countryCode": "01"
+        }
+    ]
 }
-GET /api/usuarios/{id}: Obtener los detalles de un usuario por su id.
+```
 
-GET /api/usuarios: Obtener la lista de todos los usuarios.
+Response:
+```
+{
+    "id": "88dfe109-90e7-436b-a10b-5679f6b1a800",
+    "createdAt": "2025-01-07T18:51:35.8606564",
+    "lastLogin": "2025-01-07T18:51:35.8606564",
+    "token": "eyJhbGciOiJIUzI1NiJ9...",
+    "isActive": true
+}
+```
 
-6. Base de Datos y H2 Console
-Si estás utilizando H2, puedes acceder a la consola web para ver el contenido de la base de datos en la siguiente URL:
+GET `http://localhost:8090/users/login` : obtener los detalles de un usuario por su uuid, para ser consumido debemos tomar el atributo `token` del response del endpoint anterior y colocarlo en el `Authorization` header del request con el prefijo `Bearer ` 
 
-bash
-Copy code
-http://localhost:8080/h2-console
-Asegúrate de usar la URL jdbc:h2:mem:testdb para conectarte.
+Response:
+```
+{
+    "id": "88dfe109-90e7-436b-a10b-5679f6b1a800",
+    "createdAt": "2025-01-07T18:51:35.860656",
+    "lastLogin": "2025-01-07T18:51:35.860656",
+    "token": "eyJhbGciOiJz9KB3TJSitEo...",
+    "isActive": true,
+    "name": "Juan Perez",
+    "email": "juan@correo.com",
+    "password": "a3asfGfdfdf4",
+    "phones": [
+        {
+            "number": 778779234,
+            "cityCode": 99,
+            "countryCode": "01"
+        }
+    ]
+}
+```
