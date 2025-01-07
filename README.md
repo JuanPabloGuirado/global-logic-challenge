@@ -2,12 +2,12 @@
 
 El presente proyecto es un microservicio desarrollado con Spring Boot (versión 2.5.14) y Gradle (versión 7.4) para la gestión de usuarios. Permite la creación y consulta de usuarios, además de la gestion de los teléfonos asociados a cada usuario.
 
-###Requisitos 
+###Requisitos   
 * Java 11 
 * Gradle 7.4
 * Spring Boot 2.5.14
 
-###Descripción
+###Descripción  
 Este microservicio proporciona endpoints para crear y consultar usuarios. Además, cada usuario puede tener múltiples teléfonos asociados. Las entidades principales son:
 
 * UserEntity: representa al usuario con atributos como userUuid, name, email, password, createdAt, lastLogin, y isActive.
@@ -35,15 +35,15 @@ El archivo application.yaml contiene las configuraciones necesarias para la cone
 
 La base de datos en memoria (H2), ya está preconfigurada de la siguiente manera:
 
-* Base de datos url = jdbc:h2:mem:userdb
-* Username = admin
-* Password = 1234
+* Base de datos url = jdbc:h2:mem:userdb  
+* Username = admin  
+* Password = 1234  
 
 NOTA: con estas mismas credenciales podras acceder a la consola web de h2 (una vez que el proyecto este siendo ejecutado localmente), entrando a: 
 
 `http://localhost:8080/h2-console/`
 
-4. Ejecutar el Proyecto
+4. Ejecutar el Proyecto  
 Para ejecutar el microservicio de manera local, usa el siguiente comando:
 
     `./gradlew bootRun`
