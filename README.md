@@ -107,3 +107,5 @@ Response:
     ]
 }
 ```
+
+NOTA: En la carpeta `diagrams` dentro del folder raiz del proyecto se encuentran los diagramas de secuencia y de componentes del proyecto
