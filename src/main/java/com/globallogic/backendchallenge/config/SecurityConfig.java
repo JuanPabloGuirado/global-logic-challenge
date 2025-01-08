@@ -16,9 +16,9 @@ public class SecurityConfig {
             throws Exception {
         http
                 .csrf()
-                .disable() // Disable CSRF for H2 console
+                .disable()
                 .headers()
-                .frameOptions().sameOrigin() // Allow H2 console to display in frames
+                .frameOptions().sameOrigin()
                 .and()
                 .authorizeRequests()
                 .antMatchers("/h2-console/**").permitAll()

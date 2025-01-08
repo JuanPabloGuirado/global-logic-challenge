@@ -47,7 +47,7 @@ public class DataEncryptionService {
             cipher.init(Cipher.DECRYPT_MODE, secretKey, spec);
             byte[] originalPassword = cipher.doFinal(encryptedPasswordBytes);
             return new String(originalPassword);
-        } catch (GeneralSecurityException exception) {
+        } catch (IllegalArgumentException | GeneralSecurityException exception) {
             log.error(String.format("Error during password decryption - message: %s",
                     exception.getLocalizedMessage()));
             throw new EncryptionException();

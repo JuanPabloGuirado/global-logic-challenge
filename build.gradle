@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.5.14'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id 'jacoco'
 }
 
 group = 'com.globallogic'
@@ -11,6 +12,10 @@ java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(11)
 	}
+}
+
+jacoco {
+	toolVersion = "0.8.7"
 }
 
 configurations {
@@ -44,5 +49,29 @@ dependencies {
 }
 
 tasks.named('test') {
+	exclude '**/com/globallogic/backendchallenge/config/**'
+	exclude '**/com/globallogic/backendchallenge/utils/**'
+	exclude '**/com/globallogic/backendchallenge/domain/dto/**'
+	exclude '**/com/globallogic/backendchallenge/domain/exception/**'
+	exclude '**/com/globallogic/backendchallenge/domain/validation/**'
+	exclude '**/com/globallogic/backendchallenge/infrastructure/aspect/**'
+	exclude '**/com/globallogic/backendchallenge/infrastructure/adapters/output/persistence/**'
 	useJUnitPlatform()
+	finalizedBy jacocoTestReport
+	testLogging {
+		events "passed", "skipped", "failed"
+	}
 }
+
+jacocoTestReport {
+	dependsOn test
+	reports {
+		html {
+			destination file("$buildDir/reports/jacoco/test/html")
+		}
+		xml.enabled false
+		csv.enabled false
+	}
+}
+
+tasks.check.dependsOn jacocoTestReport
