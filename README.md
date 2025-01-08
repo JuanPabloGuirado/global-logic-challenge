@@ -1,13 +1,13 @@
-###Microservicio para la Creación y Consulta de Usuarios
+### Microservicio para la Creación y Consulta de Usuarios
 
 El presente proyecto es un microservicio desarrollado con Spring Boot (versión 2.5.14) y Gradle (versión 7.4) para la gestión de usuarios. Permite la creación y consulta de usuarios, además de la gestion de los teléfonos asociados a cada usuario.
 
-###Requisitos   
+### Requisitos   
 * Java 11 
 * Gradle 7.4
 * Spring Boot 2.5.14
 
-###Descripción  
+### Descripción  
 Este microservicio proporciona endpoints para crear y consultar usuarios. Además, cada usuario puede tener múltiples teléfonos asociados. Las entidades principales son:
 
 * UserEntity: representa al usuario con atributos como userUuid, name, email, password, createdAt, lastLogin, y isActive.
