@@ -8,6 +8,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SigningKeyResolver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -40,16 +42,19 @@ public class JwtValidationFilter extends OncePerRequestFilter {
             response.getWriter().flush();
             return;
         }
-        String token = authorizationHeader.substring(7);
+        String trimmedToken = Optional.of(authorizationHeader)
+                .filter(str -> str.length() > 7)
+                .map(str -> str.substring(7))
+                .orElse(Strings.EMPTY);
 
         try {
             Jwts.parserBuilder()
                     .setSigningKeyResolver(signingKeyResolver)
                     .build()
-                    .parseClaimsJws(token);
+                    .parseClaimsJws(trimmedToken);
             filterChain.doFilter(request, response);
         } catch (JwtException e) {
-            log.error(String.format("Invalid jwt: %s", token));
+            log.error(String.format("Invalid jwt: %s", trimmedToken));
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.getWriter().write(gson.toJson(getErrorResponse()));
