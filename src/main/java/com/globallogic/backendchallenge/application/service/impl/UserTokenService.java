@@ -18,21 +18,18 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserTokenService {
 
-    @Value("${secret-key}")
-    private String secretKey;
+    private final Key key;
 
     public String generateToken(String uuid) {
-        Key key = Keys.hmacShaKeyFor(secretKey.getBytes());
         return Jwts.builder()
                 .claim("uuid", uuid)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 864000))
+                .setExpiration(new Date(System.currentTimeMillis() + 3600000))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
     public Map<String, Object> parseToken(String token) {
-        Key key = Keys.hmacShaKeyFor(secretKey.getBytes());
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
